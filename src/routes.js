@@ -23,11 +23,12 @@ routes.put('/recipients/:id', RecipientController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.get('/deliverymen', DeliverymanController.index);
 routes.post('/deliverymen', DeliverymanController.store);
+routes.get('/deliverymen', DeliverymanController.index);
 routes.put('/deliverymen/:id', DeliverymanController.update);
 routes.delete('/deliverymen/:id', DeliverymanController.delete);
 
-routes.post('/package', PackageController.store);
+routes.post('/packages', PackageController.store);
+routes.get('/packages', PackageController.index);
 
 export default routes;

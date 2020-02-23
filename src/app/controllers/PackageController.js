@@ -34,23 +34,55 @@ class PackageController {
         await Mail.sendMail({
             to: `${orderData.entregador.name} <${orderData.entregador.email}>`,
             subject: 'Nova mercadoria cadastrada',
-            text: `Olá ${orderData.entregador.name}!
-
-            Uma nova mercadoria está disponível para retirada.
-
-            Dados do produto:
-            nome - ${order.product}
-            
-            Dados da Entrega:
-            Destinatário: ${orderData.destinatario.name}
-            Rua: ${orderData.destinatario.address_street}
-            Número: ${orderData.destinatario.address_number}
-            Complemento: ${orderData.destinatario.address_complement || ''}
-            UF: ${orderData.destinatario.uf}
-            CEP: ${orderData.destinatario.address_zipcode}
-            `
+            template: 'newPackage',
+            context: {
+                deliveryman: orderData.entregador.name,
+                product: order.product,
+                recipient: orderData.destinatario.name,
+                address_street: orderData.destinatario.address_street,
+                address_number: orderData.destinatario.address_number,
+                address_complement:
+                    orderData.destinatario.address_complement || '',
+                uf: orderData.destinatario.uf,
+                address_zipcode: orderData.destinatario.address_zipcode
+            }
         });
         return res.json(orderData);
+    }
+
+    async index(req, res) {
+        const packages = await Package.findAll({
+            attributes: [
+                'id',
+                'product',
+                'start_date',
+                'end_date',
+                'recipient_id',
+                'deliveryman_id'
+            ],
+            include: [
+                {
+                    model: Deliveryman,
+                    as: 'entregador',
+                    attributes: ['id', 'name', 'email']
+                },
+                {
+                    model: Recipient,
+                    as: 'destinatario',
+                    attributes: [
+                        'id',
+                        'name',
+                        'cpf',
+                        'address_street',
+                        'address_number',
+                        'address_complement',
+                        'uf',
+                        'address_zipcode'
+                    ]
+                }
+            ]
+        });
+        return res.json(packages);
     }
 }
 
