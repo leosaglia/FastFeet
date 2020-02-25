@@ -10,6 +10,7 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import PackageController from './app/controllers/PackageController';
 import DeliverymanDashboardController from './app/controllers/DeliverymanDashboardController';
 import DeliveriesController from './app/controllers/DeliveriesController';
+import Delivery_problemController from './app/controllers/Delivery_problemController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -37,6 +38,13 @@ routes.get('/deliverymen/:id/dashboard', DeliverymanDashboardController.index);
 routes.put(
     '/deliverymen/:id/dashboard/:order',
     DeliverymanDashboardController.update
+);
+
+routes.get('/delivery/:id/problems', Delivery_problemController.index);
+routes.post('/delivery/:id/problems', Delivery_problemController.store);
+routes.delete(
+    '/problem/:id/cancel-delivery',
+    Delivery_problemController.delete
 );
 
 routes.post('/packages', PackageController.store);
