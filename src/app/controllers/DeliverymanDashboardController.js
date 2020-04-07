@@ -5,11 +5,16 @@ import Recipient from '../models/Recipient';
 
 class DeliverymanDashboardController {
     async index(req, res) {
+        const { product } = req.query;
+
         const orders = await Package.findAll({
             where: {
                 deliveryman_id: req.params.id,
                 canceled_at: null,
-                end_date: null
+                end_date: null,
+                product: {
+                    [Op.iLike]: `%${product || ''}%`
+                }
             },
             attributes: ['id', 'product', 'start_date', 'recipient_id'],
             include: [

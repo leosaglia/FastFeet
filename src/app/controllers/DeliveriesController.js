@@ -6,11 +6,16 @@ import File from '../models/File';
 
 class DeliveriesController {
     async index(req, res) {
+        const { product } = req.query;
+
         const orders = await Package.findAll({
             where: {
                 deliveryman_id: req.params.id,
                 end_date: {
                     [Op.ne]: null
+                },
+                product: {
+                    [Op.iLike]: `%${product || ''}%`
                 }
             },
             attributes: [

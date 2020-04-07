@@ -21,6 +21,8 @@ routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 
+routes.get('/recipients', RecipientController.index);
+routes.get('/recipients?name', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
 
@@ -28,12 +30,18 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/deliverymen', DeliverymanController.store);
 routes.get('/deliverymen', DeliverymanController.index);
+routes.get('/deliverymen?name', DeliverymanController.index);
 routes.put('/deliverymen/:id', DeliverymanController.update);
 routes.delete('/deliverymen/:id', DeliverymanController.delete);
 
 routes.get('/deliverymen/:id/deliveries', DeliveriesController.index);
+routes.get('/deliverymen/:id/deliveries?product', DeliveriesController.index);
 routes.post('/deliverymen/:id/deliveries/:order', DeliveriesController.update);
 
+routes.get(
+    '/deliverymen/:id/dashboard?product',
+    DeliverymanDashboardController.index
+);
 routes.get('/deliverymen/:id/dashboard', DeliverymanDashboardController.index);
 routes.put(
     '/deliverymen/:id/dashboard/:order',
