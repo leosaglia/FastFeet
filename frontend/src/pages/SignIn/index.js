@@ -1,15 +1,17 @@
 import React, { useRef } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import Input from '../../components/Form/input';
 
 import logo from '../../assets/logo.PNG';
+
 import { SignInRequest } from '../../store/modules/auth/actions';
 
 export default function SignIn() {
+   const loading = useSelector((state) => state.auth.loading);
    const formRef = useRef(null);
    const dispatch = useDispatch();
 
@@ -65,7 +67,9 @@ export default function SignIn() {
                />
             </label>
 
-            <button type="submit">Entrar no Sistema</button>
+            <button type="submit">
+               {loading ? 'Carregando...' : 'Entrar no Sistema'}
+            </button>
          </Form>
       </>
    );
