@@ -37,6 +37,14 @@ export const Content = styled.div`
             border: 1px solid #ddd;
             border-radius: 4px;
          }
+
+         span {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: 14px;
+            color: rgb(255, 40, 60);
+         }
       }
 
       button {

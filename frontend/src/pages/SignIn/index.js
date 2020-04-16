@@ -1,15 +1,56 @@
-import React from 'react';
+import React, { useRef } from 'react';
+
+import { useDispatch } from 'react-redux';
+
+import * as Yup from 'yup';
+import { Form } from '@unform/web';
+import Input from '../../components/Form/input';
 
 import logo from '../../assets/logo.PNG';
+import { SignInRequest } from '../../store/modules/auth/actions';
 
 export default function SignIn() {
+   const formRef = useRef(null);
+   const dispatch = useDispatch();
+
+   async function handleSubmit(data) {
+      try {
+         formRef.current.setErrors({});
+
+         const schema = Yup.object().shape({
+            email: Yup.string()
+               .email('Insira um e-mail válido')
+               .required('O e-mail é obrigatório'),
+            password: Yup.string().required('A senha é obrigatória'),
+         });
+
+         await schema.validate(data, {
+            abortEarly: false, // Realizar todas as validações
+         });
+
+         const { email, password } = data;
+
+         dispatch(SignInRequest(email, password));
+      } catch (err) {
+         const validationErrors = {};
+
+         if (err instanceof Yup.ValidationError) {
+            err.inner.forEach((error) => {
+               validationErrors[error.path] = error.message;
+            });
+
+            formRef.current.setErrors(validationErrors);
+         }
+      }
+   }
+
    return (
       <>
          <img src={logo} alt="FastFeet" />
-         <form action="">
+         <Form ref={formRef} onSubmit={handleSubmit}>
             <label htmlFor="email">
                SEU E-MAIL
-               <input
+               <Input
                   name="email"
                   type="email"
                   placeholder="exemplo@email.com"
@@ -17,7 +58,7 @@ export default function SignIn() {
             </label>
             <label htmlFor="password">
                SUA SENHA
-               <input
+               <Input
                   name="password"
                   type="password"
                   placeholder="***********"
@@ -25,7 +66,7 @@ export default function SignIn() {
             </label>
 
             <button type="submit">Entrar no Sistema</button>
-         </form>
+         </Form>
       </>
    );
 }
