@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import MainActions from '../../components/MainActions';
+import { MainActions, ToggleMenu, ItemModal } from '../../components/Actions';
+import StatusBadge from '../../components/StatusBadge';
+
+import { Table } from '../_layouts/auth/styles';
 
 import api from '../../services/api';
 
@@ -27,7 +30,7 @@ export default function Orders() {
       <>
          <h1>Gerenciando encomendas</h1>
          <MainActions />
-         <table>
+         <Table>
             <thead>
                <tr>
                   <th>ID</th>
@@ -40,42 +43,31 @@ export default function Orders() {
                </tr>
             </thead>
             <tbody>
-               {orders.map((order) => {
-                  let status;
-                  let className;
-                  if (order.canceled_at) {
-                     status = 'CANCELADA';
-                     className = 'red';
-                  } else if (order.end_date) {
-                     status = 'ENTREGUE';
-                     className = 'green';
-                  } else if (order.start_date) {
-                     status = 'RETIRADA';
-                     className = 'blue';
-                  } else {
-                     status = 'PENDENTE';
-                     className = 'yellow';
-                  }
-
-                  return (
-                     <tr>
-                        <td>{order.fomattedId}</td>
-                        <td>{order.destinatario.name}</td>
-                        <td>{order.entregador.name}</td>
-                        <td>{order.destinatario.address_city}</td>
-                        <td>{order.destinatario.uf}</td>
-                        <td>
-                           <span className={className}>
-                              <div />
-                              {status}
-                           </span>
-                        </td>
-                        <td align="center">...</td>
-                     </tr>
-                  );
-               })}
+               {orders.map((order) => (
+                  <tr key={order.id}>
+                     <td>{order.fomattedId}</td>
+                     <td>{order.destinatario.name}</td>
+                     <td>{order.entregador.name}</td>
+                     <td>{order.destinatario.address_city}</td>
+                     <td>{order.destinatario.uf}</td>
+                     <td>
+                        <StatusBadge
+                           canceled={order.canceled_at}
+                           endDate={order.end_date}
+                           startDate={order.start_date}
+                        />
+                     </td>
+                     <td align="center">
+                        <ToggleMenu>
+                           <ItemModal text="Visualizar" />
+                           <ItemModal text="Editar" />
+                           <ItemModal text="Excluir" />
+                        </ToggleMenu>
+                     </td>
+                  </tr>
+               ))}
             </tbody>
-         </table>
+         </Table>
       </>
    );
 }
